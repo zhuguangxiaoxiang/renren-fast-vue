@@ -24,6 +24,20 @@
         </span>
       </span>
     </el-tree>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <el-form :model="category">
+        <el-form-item label="分类名称">
+          <el-input v-model="category.name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addCategory">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -36,6 +50,8 @@ export default {
   data () {
     //这里存放数据
     return {
+      category: {name: '', parentCid: 0, catLevel: 0, showStatus: 1, sort: 0},
+      dialogVisible: false,
       menus: [],
       expandedKey: [],
       defaultProps: {
@@ -61,7 +77,37 @@ export default {
     },
 
     append (data) {
-      console.log('append', data)
+      this.dialogVisible = true;
+      this.category.name = '';
+      console.log('append', data);
+      this.category.parentCid = data.catId;
+      console.log('添加节点之后的父ID为：', this.category.parentCid);
+      this.category.catLevel = (data.catLevel * 1) + 1;
+      console.log('添加节点之后的层级为：', this.category.catLevel);
+    },
+
+    //添加三级分类
+    addCategory () {
+      console.log('提交的三级分类数据', this.category);
+      console.log('添加节点之后的父ID为：', this.category.parentCid);
+      console.log('添加节点之后的层级为：', this.category.catLevel);
+      this.$http({
+        url: this.$http.adornUrl('/product/category/save'),
+        method: 'post',
+        data: this.$http.adornData(this.category, false)
+      }).then(({data}) => {
+        this.$message({
+          message: '菜单保存成功',
+          type: 'success'
+        })
+        this.getMenus();
+      })
+      this.dialogVisible = false;
+      //刷新出新的菜单
+      this.getMenus();
+      //设置需要默认展开的菜单
+      this.expandedKey = [this.category.parentCid];
+
     },
 
     remove (node, data) {
@@ -82,24 +128,24 @@ export default {
           })
           console.log('删除成功...', '当前id为' + ids, '父ID为' + node.data.parentCid)
           //刷新出新的菜单
-          this.getMenus()
+          this.getMenus();
           //设置需要默认展开的菜单
           this.expandedKey = [node.data.parentCid]
         })
         console.log('remove', node, data)
-        console.log('父ID',node.data.parentCid)
+        console.log('父ID', node.data.parentCid)
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
       })
-      console.log('remove', node, data)
+      console.log('remove', node, data);
     },
   },
   //生命周期 - 创建完成（可以访问当前 this 实例）
   created () {
-    this.getMenus()
+    this.getMenus();
   },
   //生命周期 - 挂载完成（可以访问 DOM 元素）,
   mounted () {
