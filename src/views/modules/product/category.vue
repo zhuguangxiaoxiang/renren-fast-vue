@@ -112,8 +112,8 @@ export default {
         url: this.$http.adornUrl('/product/category/list/tree'),
         method: 'get'
       }).then(({data}) => {
-        console.log('成功获取到菜单数据...', data.data)
-        this.menus = data.data
+        console.log('成功获取到菜单数据...', data.data);
+        this.menus = data.data;
       })
     },
 
@@ -173,18 +173,18 @@ export default {
       let pCid = 0
       let siblings = null
       if (dropType === 'before' || dropType === 'after') {
-        pCid = dropNode.parent.data.catId === undefined ? 0 : dropNode.parent.data.catId
-        siblings = dropNode.parent.childNodes
+        pCid = dropNode.parent.data.catId === undefined ? 0 : dropNode.parent.data.catId;
+        siblings = dropNode.parent.childNodes;
       } else {
-        pCid = dropNode.data.catid
-        siblings = dropNode.childNodes
+        pCid = dropNode.data.catid;
+        siblings = dropNode.childNodes;
       }
       this.pCid.push(pCid);
       //2、当前拖拽节点的最新顺序
       for (let i = 0; i < siblings.length; i++) {
         if (siblings[i].data.catId === draggingNode.data.catId) {
           //如果遍历的是当前正在拖拽的节点
-          let catLevel = draggingNode.level
+          let catLevel = draggingNode.level;
           if (siblings[i].level !== draggingNode.level) {
             //当前节点的层级发生变化
             // if (dropType === "before" || dropType === "after") {
@@ -192,9 +192,9 @@ export default {
             // } else {
             //   catLevel = dropNode.level + 1;
             // }
-            catLevel = siblings[i].level
+            catLevel = siblings[i].level;
             //修改子节点的层级
-            this.updateChildNodeLevel(siblings[i])
+            this.updateChildNodeLevel(siblings[i]);
           }
           this.updateNodes.push({catId: siblings[i].data.catId, sort: i, parentCid: pCid, catLevel: catLevel})
         } else {
@@ -202,7 +202,7 @@ export default {
         }
       }
       //3、当前节点的最新层级
-      console.log('updateNodes', this.updateNodes)
+      console.log('updateNodes', this.updateNodes);
     },
 
     updateChildNodeLevel (node) {
@@ -210,7 +210,7 @@ export default {
         for (let i = 0; i < node.childNodes.length; i++) {
           var cNode = node.childNodes[i].data
           this.updateNodes.push({catId: cNode.catId, catLevel: node.childNodes[i].level})
-          this.updateChildNodeLevel(node.childNodes[i])
+          this.updateChildNodeLevel(node.childNodes[i]);
         }
       }
     },
@@ -237,29 +237,29 @@ export default {
       if (node.children != null && node.childNodes.length > 0) {
         for (let i = 0; i < node.childNodes.length; i++) {
           if (node.children[i].level > this.maxLevel) {
-            this.maxLevel = node.childNodes[i].catLevel
+            this.maxLevel = node.childNodes[i].catLevel;
           }
-          this.countNodeLevel(node.childNodes[i])
+          this.countNodeLevel(node.childNodes[i]);
         }
       }
     },
 
     edit (data) {
-      console.log('要修改的数据', data)
-      this.dialogType = 'edit'
-      this.dialogVisible = true
+      console.log('要修改的数据', data);
+      this.dialogType = 'edit';
+      this.dialogVisible = true;
       //发送请求获取当前节点最新的数据
       this.$http({
         url: this.$http.adornUrl(`/product/category/info/${data.catId}`),
         method: 'get',
       }).then(({data}) => {
         //请求成功
-        console.log('要回显的数据', data)
-        this.category.name = data.data.name
-        this.category.catId = data.data.catId
-        this.category.icon = data.data.icon
-        this.category.productUnit = data.data.productUnit
-        this.category.parentCid = data.data.parentCid
+        console.log('要回显的数据', data);
+        this.category.name = data.data.name;
+        this.category.catId = data.data.catId;
+        this.category.icon = data.data.icon;
+        this.category.productUnit = data.data.productUnit;
+        this.category.parentCid = data.data.parentCid;
         /**
          *         parentCid: 0,
          *         catLevel: 0,
@@ -270,34 +270,34 @@ export default {
     },
 
     append (data) {
-      console.log('append', data)
-      this.dialogType = 'add'
-      this.dialogVisible = true
-      this.category.name = ''
-      this.category.parentCid = data.catId
-      console.log('添加节点之后的父ID为：', this.category.parentCid)
-      this.category.catLevel = (data.catLevel * 1) + 1
-      console.log('添加节点之后的层级为：', this.category.catLevel)
-      this.category.catId = null
-      this.category.icon = ''
-      this.category.productUnit = ''
-      this.category.sort = 0
-      this.category.showStatus = 1
+      console.log('append', data);
+      this.dialogType = 'add';
+      this.dialogVisible = true;
+      this.category.name = '';
+      this.category.parentCid = data.catId;
+      console.log('添加节点之后的父ID为：', this.category.parentCid);
+      this.category.catLevel = (data.catLevel * 1) + 1;
+      console.log('添加节点之后的层级为：', this.category.catLevel);
+      this.category.catId = null;
+      this.category.icon = '';
+      this.category.productUnit = '';
+      this.category.sort = 0;
+      this.category.showStatus = 1;
     },
 
     submitData () {
       if (this.dialogType === 'add') {
-        this.addCategory()
+        this.addCategory();
       }
       if (this.dialogType === 'edit') {
-        this.editCategory()
+        this.editCategory();
       }
     },
 
     //修改三级分类
     editCategory () {
-      var {catId, name, icon, productUnit} = this.category
-      var data = {catId, name, icon, productUnit}
+      var {catId, name, icon, productUnit} = this.category;
+      var data = {catId, name, icon, productUnit};
       this.$http({
         url: this.$http.adornUrl('/product/category/update'),
         method: 'post',
@@ -308,18 +308,18 @@ export default {
           type: 'success'
         })
         //刷新出新的菜单
-        this.getMenus()
+        this.getMenus();
       })
-      this.dialogVisible = false
+      this.dialogVisible = false;
       //设置需要默认展开的菜单
-      this.expandedKey = [this.category.parentCid]
+      this.expandedKey = [this.category.parentCid];
     },
 
     //添加三级分类
     addCategory () {
-      console.log('提交的三级分类数据', this.category)
-      console.log('添加节点之后的父ID为：', this.category.parentCid)
-      console.log('添加节点之后的层级为：', this.category.catLevel)
+      console.log('提交的三级分类数据', this.category);
+      console.log('添加节点之后的父ID为：', this.category.parentCid);
+      console.log('添加节点之后的层级为：', this.category.catLevel);
       this.$http({
         url: this.$http.adornUrl('/product/category/save'),
         method: 'post',
@@ -330,11 +330,11 @@ export default {
           type: 'success'
         })
         //刷新出新的菜单
-        this.getMenus()
+        this.getMenus();
       })
-      this.dialogVisible = false
+      this.dialogVisible = false;
       //设置需要默认展开的菜单
-      this.expandedKey = [this.category.parentCid]
+      this.expandedKey = [this.category.parentCid];
 
     },
 
@@ -356,24 +356,24 @@ export default {
           })
           console.log('删除成功...', '当前id为' + ids, '父ID为' + node.data.parentCid)
           //刷新出新的菜单
-          this.getMenus()
+          this.getMenus();
           //设置需要默认展开的菜单
-          this.expandedKey = [node.data.parentCid]
+          this.expandedKey = [node.data.parentCid];
         })
-        console.log('remove', node, data)
-        console.log('父ID', node.data.parentCid)
+        console.log('remove', node, data);
+        console.log('父ID', node.data.parentCid);
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
       })
-      console.log('remove', node, data)
+      console.log('remove', node, data);
     },
   },
   //生命周期 - 创建完成（可以访问当前 this 实例）
   created () {
-    this.getMenus()
+    this.getMenus();
   },
   //生命周期 - 挂载完成（可以访问 DOM 元素）,
   mounted () {
