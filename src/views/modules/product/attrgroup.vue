@@ -11,6 +11,7 @@
           </el-form-item>
           <el-form-item>
             <el-button @click="getDataList()">查询</el-button>
+            <el-button type="success" @click="getAllDataList()">查询全部</el-button>
             <el-button v-if="isAuth('product:attrgroup:save')" type="primary" @click="addOrUpdateHandle()">新增
             </el-button>
             <el-button v-if="isAuth('product:attrgroup:delete')" type="danger" @click="deleteHandle()"
@@ -134,10 +135,16 @@ export default {
     treeNodeClick (data, node, component) {
       console.log('attrgroup感知到category的节点被点击', data, node, component);
       console.log('刚才被点击的菜单id：', data.catId);
-      if (node.childNodes.length === 0) {
+      if (node.isLeaf === true) {
         this.catId = data.catId;
         this.getDataList();
+      } else {
+        this.getDataList();
       }
+    },
+    getAllDataList(){
+      this.catId = 0;
+      this.getDataList();
     },
     // 获取数据列表
     getDataList () {
