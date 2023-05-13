@@ -6,9 +6,9 @@
       :props="defaultProps"
       node-key="catId"
       ref="menuTree"
-      @node-click="nodeclick"
+      @node-click="nodeClick"
       :filter-node-method="filterNode"
-      :highlight-current = "true"
+      :highlight-current="true"
     ></el-tree>
   </div>
 </template>
@@ -22,6 +22,7 @@ export default {
   data () {
     //这里存放数据
     return {
+      filterText: '',
       menus: [],
       expandedKey: [],
       defaultProps: {
@@ -34,14 +35,14 @@ export default {
   computed: {},
   //监控 data 中的数据变化,
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.menuTree.filter(val);
     }
   },
   //方法集合
   methods: {
     //树节点过滤
-    filterNode(value, data) {
+    filterNode (value, data) {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
     },

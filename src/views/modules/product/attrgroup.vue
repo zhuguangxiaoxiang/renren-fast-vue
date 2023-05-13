@@ -16,13 +16,15 @@
               v-if="isAuth('product:attrgroup:save')"
               type="primary"
               @click="addOrUpdateHandle()"
-            >新增</el-button>
+            >新增
+            </el-button>
             <el-button
               v-if="isAuth('product:attrgroup:delete')"
               type="danger"
               @click="deleteHandle()"
               :disabled="dataListSelections.length <= 0"
-            >批量删除</el-button>
+            >批量删除
+            </el-button>
           </el-form-item>
         </el-form>
         <el-table
@@ -52,7 +54,8 @@
                 type="text"
                 size="small"
                 @click="addOrUpdateHandle(scope.row.attrGroupId)"
-              >修改</el-button>
+              >修改
+              </el-button>
               <el-button type="text" size="small" @click="deleteHandle(scope.row.attrGroupId)">删除</el-button>
             </template>
           </el-table-column>
@@ -85,18 +88,19 @@
  */
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import《组件名称》from'《组件路径》';
-import Category from "../common/category";
-import AddOrUpdate from "./attrgroup-add-or-update";
-import RelationUpdate from "./attr-group-relation";
+import Category from '../common/category';
+import AddOrUpdate from './attrgroup-add-or-update';
+import RelationUpdate from './attr-group-relation';
+
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: { Category, AddOrUpdate, RelationUpdate },
+  components: {Category, AddOrUpdate, RelationUpdate},
   props: {},
-  data() {
+  data () {
     return {
       catId: 0,
       dataForm: {
-        key: ""
+        key: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -108,40 +112,40 @@ export default {
       relationVisible: false
     };
   },
-  activated() {
+  activated () {
     this.getDataList();
   },
   methods: {
     //处理分组与属性的关联
-    relationHandle(groupId) {
+    relationHandle (groupId) {
       this.relationVisible = true;
       this.$nextTick(() => {
         this.$refs.relationUpdate.init(groupId);
       });
     },
     //感知树节点被点击
-    treenodeclick(data, node, component) {
+    treenodeclick (data, node, component) {
       if (node.level === 3) {
         this.catId = data.catId;
         this.getDataList(); //重新查询
       }
     },
-    getAllDataList(){
+    getAllDataList () {
       this.catId = 0;
       this.getDataList();
     },
     // 获取数据列表
-    getDataList() {
+    getDataList () {
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl(`/product/attrgroup/list/${this.catId}`),
-        method: "get",
+        method: 'get',
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key
         })
-      }).then(({ data }) => {
+      }).then(({data}) => {
         if (data && data.code === 0) {
           this.dataList = data.page.list;
           this.totalPage = data.page.totalCount;
@@ -153,52 +157,52 @@ export default {
       });
     },
     // 每页数
-    sizeChangeHandle(val) {
+    sizeChangeHandle (val) {
       this.pageSize = val;
       this.pageIndex = 1;
       this.getDataList();
     },
     // 当前页
-    currentChangeHandle(val) {
+    currentChangeHandle (val) {
       this.pageIndex = val;
       this.getDataList();
     },
     // 多选
-    selectionChangeHandle(val) {
+    selectionChangeHandle (val) {
       this.dataListSelections = val;
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {
+    addOrUpdateHandle (id) {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.addOrUpdate.init(id);
       });
     },
     // 删除
-    deleteHandle(id) {
+    deleteHandle (id) {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.attrGroupId;
-          });
+          return item.attrGroupId;
+        });
       this.$confirm(
-        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
-        "提示",
+        `确定对[name=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/product/attrgroup/delete"),
-          method: "post",
+          url: this.$http.adornUrl('/product/attrgroup/delete'),
+          method: 'post',
           data: this.$http.adornData(ids, false)
-        }).then(({ data }) => {
+        }).then(({data}) => {
           if (data && data.code === 0) {
             this.$message({
-              message: "操作成功",
-              type: "success",
+              message: '操作成功',
+              type: 'success',
               duration: 1500,
               onClose: () => {
                 this.getDataList();
