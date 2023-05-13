@@ -1,8 +1,16 @@
 <template>
-  <el-tree :data="menus" :props="defaultProps"
-           node-key="catId" ref="menuTree" @node-click="nodeClick"
-  >
-  </el-tree>
+  <div>
+    <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+    <el-tree
+      :data="menus"
+      :props="defaultProps"
+      node-key="catId"
+      ref="menuTree"
+      @node-click="nodeclick"
+      :filter-node-method="filterNode"
+      :highlight-current = "true"
+    ></el-tree>
+  </div>
 </template>
 <script>
 //这里可以导入其他文件（比如：组件，工具 js，第三方插件 js，json文件，图片文件等等）,
@@ -25,9 +33,18 @@ export default {
   //计算属性 类似于 data 概念
   computed: {},
   //监控 data 中的数据变化,
-  watch: {},
+  watch: {
+    filterText(val) {
+      this.$refs.menuTree.filter(val);
+    }
+  },
   //方法集合
   methods: {
+    //树节点过滤
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
+    },
     getMenus () {
       this.$http({
         url: this.$http.adornUrl('/product/category/list/tree'),
