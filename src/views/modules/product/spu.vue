@@ -34,21 +34,22 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import《组件名称》from'《组件路径》';
-import CategoryCascader from "../common/category-cascader";
-import BrandSelect from "../common/brand-select";
-import Spuinfo from "./spuinfo";
+import CategoryCascader from '../common/category-cascader';
+import BrandSelect from '../common/brand-select';
+import Spuinfo from './spuinfo';
+
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: { CategoryCascader, Spuinfo, BrandSelect },
+  components: {CategoryCascader, Spuinfo, BrandSelect},
   props: {},
-  data() {
+  data () {
     //这里存放数据
     return {
       catId: 0,
       catelogPath: [],
       dataForm: {
-        status: "",
-        key: "",
+        status: '',
+        key: '',
         brandId: 0,
         catelogId: 0
       },
@@ -63,32 +64,39 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    searchSpuInfo() {
-      console.log("搜索条件", this.dataForm);
-      this.PubSub.publish("dataForm",this.dataForm);
+    searchSpuInfo () {
+      console.log('搜索条件', this.dataForm);
+      this.PubSub.publish('dataForm', this.dataForm);
     }
   },
   //生命周期-创建完成（可以访问当前this实例）
-  created() {},
+  created () {
+  },
   //生命周期-挂载完成（可以访问DOM元素）
-  mounted() {
-    this.catPathSub = PubSub.subscribe("catPath", (msg, val) => {
-      this.dataForm.catelogId = val[val.length-1];
+  mounted () {
+    this.catPathSub = PubSub.subscribe('catPath', (msg, val) => {
+      this.dataForm.catelogId = val[val.length - 1];
     });
-    this.brandIdSub = PubSub.subscribe("brandId", (msg, val) => {
+    this.brandIdSub = PubSub.subscribe('brandId', (msg, val) => {
       this.dataForm.brandId = val;
     });
   },
-  beforeCreate() {}, //生命周期-创建之前
-  beforeMount() {}, //生命周期-挂载之前
-  beforeUpdate() {}, //生命周期-更新之前
-  updated() {}, //生命周期-更新之后
-  beforeDestroy() {
-     PubSub.unsubscribe(this.catPathSub);
-     PubSub.unsubscribe(this.brandIdSub);
+  beforeCreate () {
+  }, //生命周期-创建之前
+  beforeMount () {
+  }, //生命周期-挂载之前
+  beforeUpdate () {
+  }, //生命周期-更新之前
+  updated () {
+  }, //生命周期-更新之后
+  beforeDestroy () {
+    PubSub.unsubscribe(this.catPathSub);
+    PubSub.unsubscribe(this.brandIdSub);
   }, //生命周期-销毁之前
-  destroyed() {}, //生命周期-销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  destroyed () {
+  }, //生命周期-销毁完成
+  activated () {
+  } //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
 <style scoped>
