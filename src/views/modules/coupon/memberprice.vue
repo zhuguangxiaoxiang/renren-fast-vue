@@ -10,13 +10,15 @@
           v-if="isAuth('coupon:memberprice:save')"
           type="primary"
           @click="addOrUpdateHandle()"
-        >新增</el-button>
+        >新增
+        </el-button>
         <el-button
           v-if="isAuth('coupon:memberprice:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button>
+        >批量删除
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -39,7 +41,7 @@
         label="可否叠加其他优惠"
       >
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.addOther==0">不可叠加优惠</el-tag>
+          <el-tag type="primary" v-if="scope.row.addOther===0">不可叠加优惠</el-tag>
           <el-tag type="success" v-else>可叠加优惠</el-tag>
         </template>
       </el-table-column>
@@ -65,12 +67,13 @@
 </template>
 
 <script>
-import AddOrUpdate from "./memberprice-add-or-update";
+import AddOrUpdate from './memberprice-add-or-update';
+
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        key: ""
+        key: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -84,22 +87,22 @@ export default {
   components: {
     AddOrUpdate
   },
-  activated() {
+  activated () {
     this.getDataList();
   },
   methods: {
     // 获取数据列表
-    getDataList() {
+    getDataList () {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/coupon/memberprice/list"),
-        method: "get",
+        url: this.$http.adornUrl('/coupon/memberprice/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key
         })
-      }).then(({ data }) => {
+      }).then(({data}) => {
         if (data && data.code === 0) {
           this.dataList = data.page.list;
           this.totalPage = data.page.totalCount;
@@ -111,52 +114,52 @@ export default {
       });
     },
     // 每页数
-    sizeChangeHandle(val) {
+    sizeChangeHandle (val) {
       this.pageSize = val;
       this.pageIndex = 1;
       this.getDataList();
     },
     // 当前页
-    currentChangeHandle(val) {
+    currentChangeHandle (val) {
       this.pageIndex = val;
       this.getDataList();
     },
     // 多选
-    selectionChangeHandle(val) {
+    selectionChangeHandle (val) {
       this.dataListSelections = val;
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {
+    addOrUpdateHandle (id) {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.addOrUpdate.init(id);
       });
     },
     // 删除
-    deleteHandle(id) {
+    deleteHandle (id) {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.id;
-          });
+          return item.id;
+        });
       this.$confirm(
-        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
-        "提示",
+        `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/coupon/memberprice/delete"),
-          method: "post",
+          url: this.$http.adornUrl('/coupon/memberprice/delete'),
+          method: 'post',
           data: this.$http.adornData(ids, false)
-        }).then(({ data }) => {
+        }).then(({data}) => {
           if (data && data.code === 0) {
             this.$message({
-              message: "操作成功",
-              type: "success",
+              message: '操作成功',
+              type: 'success',
               duration: 1500,
               onClose: () => {
                 this.getDataList();

@@ -10,13 +10,15 @@
           v-if="isAuth('coupon:coupon:save')"
           type="primary"
           @click="addOrUpdateHandle()"
-        >新增</el-button>
+        >新增
+        </el-button>
         <el-button
           v-if="isAuth('coupon:coupon:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button>
+        >批量删除
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -30,10 +32,10 @@
       <el-table-column prop="id" header-align="center" align="center" label="id"></el-table-column>
       <el-table-column prop="couponType" header-align="center" align="center" label="优惠卷类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.couponType==0">全场赠券</el-tag>
-          <el-tag type="info" v-if="scope.row.couponType==1">会员赠券</el-tag>
-          <el-tag type="success" v-if="scope.row.couponType==2">购物赠券</el-tag>
-          <el-tag type="warning" v-if="scope.row.couponType==3">注册赠券</el-tag>
+          <el-tag v-if="scope.row.couponType===0">全场赠券</el-tag>
+          <el-tag type="info" v-if="scope.row.couponType===1">会员赠券</el-tag>
+          <el-tag type="success" v-if="scope.row.couponType===2">购物赠券</el-tag>
+          <el-tag type="warning" v-if="scope.row.couponType===3">注册赠券</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="couponImg" header-align="center" align="center" label="优惠券图片"></el-table-column>
@@ -46,9 +48,9 @@
       <el-table-column prop="endTime" header-align="center" align="center" label="结束时间"></el-table-column>
       <el-table-column prop="useType" header-align="center" align="center" label="使用类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.useType==0">全场通用</el-tag>
-          <el-tag type="info" v-if="scope.row.useType==1">指定分类</el-tag>
-          <el-tag type="success" v-if="scope.row.useType==2">指定商品</el-tag>
+          <el-tag v-if="scope.row.useType===0">全场通用</el-tag>
+          <el-tag type="info" v-if="scope.row.useType===1">指定分类</el-tag>
+          <el-tag type="success" v-if="scope.row.useType===2">指定商品</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="note" header-align="center" align="center" label="备注"></el-table-column>
@@ -62,13 +64,13 @@
       <el-table-column prop="code" header-align="center" align="center" label="优惠码"></el-table-column>
       <el-table-column prop="memberLevel" header-align="center" align="center" label="领取所需等级">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.memberLevel==0">不限等级</el-tag>
-          <el-tag type="info" v-else>{{getLevel(scope.row.memberLevel)}}</el-tag>
+          <el-tag v-if="scope.row.memberLevel===0">不限等级</el-tag>
+          <el-tag type="info" v-else>{{ getLevel(scope.row.memberLevel) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="publish" header-align="center" align="center" label="发布状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.publish==0">未发布</el-tag>
+          <el-tag v-if="scope.row.publish===0">未发布</el-tag>
           <el-tag type="success" v-else>已发布</el-tag>
         </template>
       </el-table-column>
@@ -94,12 +96,13 @@
 </template>
 
 <script>
-import AddOrUpdate from "./coupon-add-or-update";
+import AddOrUpdate from './coupon-add-or-update';
+
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        key: ""
+        key: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -114,46 +117,46 @@ export default {
   components: {
     AddOrUpdate
   },
-  activated() {
+  activated () {
     this.getDataList();
     this.getMemberLevels();
   },
   methods: {
-    getLevel(level) {
-      let name = this.memberLevels["level_" + level];
+    getLevel (level) {
+      let name = this.memberLevels['level_' + level];
       if (name) {
         return name;
       } else {
-        return "";
+        return '';
       }
     },
-    getMemberLevels() {
+    getMemberLevels () {
       //获取所有的会员等级
       this.$http({
-        url: this.$http.adornUrl("/member/memberlevel/list"),
-        method: "get",
+        url: this.$http.adornUrl('/member/memberlevel/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: 1,
           limit: 500
         })
-      }).then(({ data }) => {
+      }).then(({data}) => {
         data.page.list.forEach(item => {
-          this.memberLevels["level_" + item.id] = item.name;
+          this.memberLevels['level_' + item.id] = item.name;
         });
       });
     },
     // 获取数据列表
-    getDataList() {
+    getDataList () {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/coupon/coupon/list"),
-        method: "get",
+        url: this.$http.adornUrl('/coupon/coupon/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key
         })
-      }).then(({ data }) => {
+      }).then(({data}) => {
         if (data && data.code === 0) {
           this.dataList = data.page.list;
           this.totalPage = data.page.totalCount;
@@ -165,52 +168,52 @@ export default {
       });
     },
     // 每页数
-    sizeChangeHandle(val) {
+    sizeChangeHandle (val) {
       this.pageSize = val;
       this.pageIndex = 1;
       this.getDataList();
     },
     // 当前页
-    currentChangeHandle(val) {
+    currentChangeHandle (val) {
       this.pageIndex = val;
       this.getDataList();
     },
     // 多选
-    selectionChangeHandle(val) {
+    selectionChangeHandle (val) {
       this.dataListSelections = val;
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {
+    addOrUpdateHandle (id) {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.addOrUpdate.init(id);
       });
     },
     // 删除
-    deleteHandle(id) {
+    deleteHandle (id) {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.id;
-          });
+          return item.id;
+        });
       this.$confirm(
-        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
-        "提示",
+        `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/coupon/coupon/delete"),
-          method: "post",
+          url: this.$http.adornUrl('/coupon/coupon/delete'),
+          method: 'post',
           data: this.$http.adornData(ids, false)
-        }).then(({ data }) => {
+        }).then(({data}) => {
           if (data && data.code === 0) {
             this.$message({
-              message: "操作成功",
-              type: "success",
+              message: '操作成功',
+              type: 'success',
               duration: 1500,
               onClose: () => {
                 this.getDataList();

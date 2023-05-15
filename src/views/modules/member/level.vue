@@ -32,7 +32,7 @@
       <el-table-column prop="growthPoint" header-align="center" align="center" label="所需成长值"></el-table-column>
       <el-table-column prop="defaultStatus" header-align="center" align="center" label="默认等级">
         <template slot-scope="scope">
-          <i class="el-icon-success" v-if="scope.row.defaultStatus==1"></i>
+          <i class="el-icon-success" v-if="scope.row.defaultStatus===1"></i>
           <i class="el-icon-error" v-else></i>
         </template>
       </el-table-column>
@@ -51,7 +51,7 @@
           label="免邮特权"
         >
           <template slot-scope="scope">
-            <i class="el-icon-success" v-if="scope.row.priviledgeFreeFreight==1"></i>
+            <i class="el-icon-success" v-if="scope.row.priviledgeFreeFreight===1"></i>
             <i class="el-icon-error" v-else></i>
           </template>
         </el-table-column>
@@ -62,7 +62,7 @@
           label="会员价格特权"
         >
           <template slot-scope="scope">
-            <i class="el-icon-success" v-if="scope.row.priviledgeMemberPrice==1"></i>
+            <i class="el-icon-success" v-if="scope.row.priviledgeMemberPrice===1"></i>
             <i class="el-icon-error" v-else></i>
           </template>
         </el-table-column>
@@ -73,7 +73,7 @@
           label="生日特权"
         >
           <template slot-scope="scope">
-            <i class="el-icon-success" v-if="scope.row.priviledgeBirthday==1"></i>
+            <i class="el-icon-success" v-if="scope.row.priviledgeBirthday===1"></i>
             <i class="el-icon-error" v-else></i>
           </template>
         </el-table-column>

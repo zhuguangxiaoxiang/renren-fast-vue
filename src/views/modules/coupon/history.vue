@@ -22,7 +22,7 @@
       <el-table-column prop="memberNickName" header-align="center" align="center" label="会员名字"></el-table-column>
       <el-table-column prop="getType" header-align="center" align="center" label="获取方式">
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.getType==0">后台赠送</el-tag>
+          <el-tag type="primary" v-if="scope.row.getType===0">后台赠送</el-tag>
           <el-tag type="success" v-else>主动领取</el-tag>
         </template>
       </el-table-column>
@@ -34,9 +34,9 @@
         label="使用状态"
       >
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.useType==0">未使用</el-tag>
-          <el-tag type="success" v-if="scope.row.useType==1">已使用</el-tag>
-          <el-tag type="warning" v-if="scope.row.useType==2">已过期</el-tag>
+          <el-tag type="primary" v-if="scope.row.useType===0">未使用</el-tag>
+          <el-tag type="success" v-if="scope.row.useType===1">已使用</el-tag>
+          <el-tag type="warning" v-if="scope.row.useType===2">已过期</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="useTime" header-align="center" align="center" label="使用时间"></el-table-column>
@@ -58,10 +58,10 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        key: ""
+        key: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -72,24 +72,23 @@ export default {
       addOrUpdateVisible: false
     };
   },
-  components: {
-  },
-  activated() {
+  components: {},
+  activated () {
     this.getDataList();
   },
   methods: {
     // 获取数据列表
-    getDataList() {
+    getDataList () {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/coupon/couponhistory/list"),
-        method: "get",
+        url: this.$http.adornUrl('/coupon/couponhistory/list'),
+        method: 'get',
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key
         })
-      }).then(({ data }) => {
+      }).then(({data}) => {
         if (data && data.code === 0) {
           this.dataList = data.page.list;
           this.totalPage = data.page.totalCount;
@@ -101,52 +100,52 @@ export default {
       });
     },
     // 每页数
-    sizeChangeHandle(val) {
+    sizeChangeHandle (val) {
       this.pageSize = val;
       this.pageIndex = 1;
       this.getDataList();
     },
     // 当前页
-    currentChangeHandle(val) {
+    currentChangeHandle (val) {
       this.pageIndex = val;
       this.getDataList();
     },
     // 多选
-    selectionChangeHandle(val) {
+    selectionChangeHandle (val) {
       this.dataListSelections = val;
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {
+    addOrUpdateHandle (id) {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.addOrUpdate.init(id);
       });
     },
     // 删除
-    deleteHandle(id) {
+    deleteHandle (id) {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.id;
-          });
+          return item.id;
+        });
       this.$confirm(
-        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
-        "提示",
+        `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/coupon/couponhistory/delete"),
-          method: "post",
+          url: this.$http.adornUrl('/coupon/couponhistory/delete'),
+          method: 'post',
           data: this.$http.adornData(ids, false)
-        }).then(({ data }) => {
+        }).then(({data}) => {
           if (data && data.code === 0) {
             this.$message({
-              message: "操作成功",
-              type: "success",
+              message: '操作成功',
+              type: 'success',
               duration: 1500,
               onClose: () => {
                 this.getDataList();
