@@ -550,7 +550,6 @@ export default {
     },
     generateSkus() {
       this.step = 3;
-
       //根据笛卡尔积运算进行生成sku
       let selectValues = [];
       this.dataResp.tableAttrColumn = [];
